@@ -34,6 +34,7 @@ def Init():
 
     # df = pd.read_csv("meanStd.csv",index_col=0)
 
+    '''
     print("Loading modelScore")
     modelScoreAssetEndpoint="https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
     modelScoreResponse=requests.get(url=modelScoreAssetEndpoint)
@@ -44,6 +45,7 @@ def Init():
     testScore=modelScoreResponse.json()["testScore"]
     print(trainScore)
     print(testScore)
+    '''
 
 def Predict(mode,input):
     print("Select input mode number")
