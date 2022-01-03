@@ -1,5 +1,5 @@
 # PredictStarNumber
-[RankedMapData](https://github.com/rakkyo150/RankedMapData)のデータをもとにScoreSaberのランク基準の星の数の予測をするアプリ。<br>
+[RankedMapData](https://github.com/rakkyo150/RankedMapData)のデータをもとに、BeatSaverで公開されている譜面のScoreSaberのランク基準の星の数を予測するアプリ。<br>
 [こちら](https://predictstarnumber.herokuapp.com/)から使えます。<br>
 [PredictStarNumberHelper](https://github.com/rakkyo150/PredictStarNumberHelper)のモデルを使用。<br>
 BeatSaverのAPIから取得できる情報のみで学習を行ったので、譜面にもよりますが、結構外れた値がでることもあります。<br>
