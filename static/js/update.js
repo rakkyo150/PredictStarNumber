@@ -1,6 +1,6 @@
 $(function(){
     $.ajax({
-        url: '/test',
+        url: '/init',
         type: 'post',
         data: '読み込み開始'
     }).done(function(data){
@@ -24,8 +24,12 @@ $(function(){
             type: 'post',
             data: postData,
         }).done(function(data){
+            let resultHtml="";
             console.log(data);
-            $("h1.resultMain").html(data)
+            Object.keys(data).forEach(function(key){
+                resultHtml+=`<p>${key} - ${this[key]}</p>\n`
+            },data)
+            $("h1.resultMain").html(resultHtml)
             $("div.errorPredict").css("display","none")
             $("div.finishPredict").css("display","block")
         }).fail(function(){
