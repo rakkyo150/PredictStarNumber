@@ -18,7 +18,7 @@ class Main:
         modelAssetResponse = requests.get(url=modelAssetEndpoint)
         modelJson = modelAssetResponse.json()
         secondHeaders = {'Accept': 'application/octet-stream'}
-        modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
+        modelResponse = requests.get(url=modelJson["assets"][3]["browser_download_url"],
                                      headers=secondHeaders)
 
         Main.clf = pickle.load(io.BytesIO(modelResponse.content))
@@ -32,7 +32,7 @@ class Main:
         meanStdResponse = requests.get(url=meanStdAssetEndpoint)
         meanStdJson = meanStdResponse.json()
         secondHeaders = {'Accept': 'application/octet-stream'}
-        meanStdResponse = requests.get(url=meanStdJson["assets"][1]["browser_download_url"],
+        meanStdResponse = requests.get(url=meanStdJson["assets"][2]["browser_download_url"],
                                        headers=secondHeaders)
 
         Main.df = pd.read_csv(io.BytesIO(meanStdResponse.content), sep=",", index_col=0)
