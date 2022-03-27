@@ -1,11 +1,13 @@
 import os
 
 from flask import Flask, abort, jsonify, make_response, render_template, request
+from flask_cors import CORS
 
 import main
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+CORS(app)
 
 instance = main.Main()
 
