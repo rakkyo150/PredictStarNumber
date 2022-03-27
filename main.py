@@ -62,10 +62,18 @@ class Main:
             print("Input !bsr")
             bsr = input
             response = requests.get(f'https://api.beatsaver.com/maps/id/{bsr}')
+        elif mode =="leaderboardId":
+            print("Input leaderboardId")
+            leaderboardId = input
+            scoreSaberResponse=requests.get(f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
+            sSResponseJson=scoreSaberResponse.json()
+            hash=sSResponseJson["songHash"]
+            response=requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
         else:
             print("Input hash")
             hash = input
             response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
+
 
         # result=""
         result = {}

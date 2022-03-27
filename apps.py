@@ -57,6 +57,19 @@ def apiPredictWithHash(hash):
         return make_response(jsonify(result))
 
 
+@app.route('/api/leaderboardId/<string:leaderboardId>', methods=['GET'])
+def apiPredictWithLeaderboardId(leaderboardId):
+    if request.method == 'GET':
+        print(f"leaderboardId : {leaderboardId}")
+        if instance.clf is None or instance.df is None:
+            instance.initModel()
+        try:
+            result = instance.predict("leaderboardId", leaderboardId)
+        except:
+            abort(404)
+        return make_response(jsonify(result))
+
+
 @app.errorhandler(404)
 def notFound(error):
     return make_response(jsonify({'error': 'Not Found'}), 404)
