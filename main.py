@@ -10,7 +10,7 @@ class Main:
     clf = None
     df = None
 
-    def initModel(self):
+    def initModel(self) -> None:
         warnings.simplefilter('ignore', UserWarning)
 
         print("Loading model")
@@ -52,7 +52,7 @@ class Main:
         print(testScore)
         '''
 
-    def predict(self, mode, input):
+    def predict(self, mode, input) -> dict:
         print("Select input mode number")
         print("1:!bsr 2:hash")
 
@@ -89,66 +89,69 @@ class Main:
 
             for k in mapDifficulty:
 
+                """
                 if k["characteristic"] != "Standard":
                     pass
                 else:
-                    bpm = mapDetail["metadata"]["bpm"]
-                    duration = mapDetail["metadata"]["duration"]
+                """
 
-                    if "sageScore" in mapDetail["versions"][-1]:
-                        sageScore = mapDetail["versions"][-1]["sageScore"]
-                    else:
-                        print("sageScore is null")
-                        sageScore = 0
+                bpm = mapDetail["metadata"]["bpm"]
+                duration = mapDetail["metadata"]["duration"]
 
-                    difficulty = k["difficulty"]
-                    if difficulty == "Easy":
-                        difficulty = 0
-                    elif difficulty == "Normal":
-                        difficulty = 1
-                    elif difficulty == "Hard":
-                        difficulty = 2
-                    elif difficulty == "Expert":
-                        difficulty = 3
-                    elif difficulty == "ExpertPlus":
-                        difficulty = 4
+                if "sageScore" in mapDetail["versions"][-1]:
+                    sageScore = mapDetail["versions"][-1]["sageScore"]
+                else:
+                    print("sageScore is null")
+                    sageScore = 0
 
-                    njs = k["njs"]
-                    offset = k["offset"]
-                    notes = k["notes"]
-                    bombs = k["bombs"]
-                    obstacles = k["obstacles"]
-                    nps = k["nps"]
-                    characteristic = k["characteristic"]
-                    events = k["events"]
-                    chroma = k["chroma"]
+                difficulty = k["difficulty"]
+                if difficulty == "Easy":
+                    difficulty = 0
+                elif difficulty == "Normal":
+                    difficulty = 1
+                elif difficulty == "Hard":
+                    difficulty = 2
+                elif difficulty == "Expert":
+                    difficulty = 3
+                elif difficulty == "ExpertPlus":
+                    difficulty = 4
 
-                    if chroma is True:
-                        chroma = 1
-                    else:
-                        chroma = 0
-                    errors = k["paritySummary"]["errors"]
-                    warns = k["paritySummary"]["warns"]
-                    resets = k["paritySummary"]["resets"]
+                njs = k["njs"]
+                offset = k["offset"]
+                notes = k["notes"]
+                bombs = k["bombs"]
+                obstacles = k["obstacles"]
+                nps = k["nps"]
+                characteristic = k["characteristic"]
+                events = k["events"]
+                chroma = k["chroma"]
 
-                    i = 0
-                    list = []
-                    for d in [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
-                              obstacles,
-                              nps, events, chroma, warns, resets]:
-                        d = (d - Main.df.iloc[i, 0]) / Main.df.iloc[i, 1]
-                        list.append(d)
-                        i += 1
+                if chroma is True:
+                    chroma = 1
+                else:
+                    chroma = 0
+                errors = k["paritySummary"]["errors"]
+                warns = k["paritySummary"]["warns"]
+                resets = k["paritySummary"]["resets"]
 
-                    data = [list]
+                i = 0
+                list = []
+                for d in [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
+                          obstacles,
+                          nps, events, chroma,warns, resets]:
+                    d = (d - Main.df.iloc[i, 0]) / Main.df.iloc[i, 1]
+                    list.append(d)
+                    i += 1
 
-                    ans = Main.clf.predict(data)
-                    # type(ans) -> numpy.ndarray
+                data = [list]
 
-                    finishPredict = (ans[0] * Main.df.iloc[14, 1]) + Main.df.iloc[14, 0]
-                    floatStarNumber = float(finishPredict)
-                    roundStarNumber = round(floatStarNumber, 2)
-                    # result+=f'<p>{k["difficulty"]} - {roundStarNumber}</p>\n'
-                    result.setdefault(k["difficulty"], roundStarNumber)
+                ans = Main.clf.predict(data)
+                # type(ans) -> numpy.ndarray
+
+                finishPredict = (ans[0] * Main.df.iloc[14, 1]) + Main.df.iloc[14, 0]
+                floatStarNumber = float(finishPredict)
+                roundStarNumber = round(floatStarNumber, 2)
+                # result+=f'<p>{characteristic}-{k["difficulty"]} - {roundStarNumber}</p>\n'
+                result.setdefault(f'{characteristic}-{k["difficulty"]}', roundStarNumber)
 
         return result

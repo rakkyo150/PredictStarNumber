@@ -27,7 +27,7 @@ $(function(){
             let resultHtml="";
             console.log(data);
             Object.keys(data).forEach(function(key){
-                resultHtml+=`<p>${key} - ${this[key]}</p>\n`
+                resultHtml+=`<p>${key} : ${this[key]}</p>\n`
             },data)
             $("h1.resultMain").html(resultHtml)
             $("div.errorPredict").css("display","none")
