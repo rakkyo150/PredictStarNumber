@@ -17,7 +17,7 @@ $(function(){
         console.log(checkValue)
 
         console.log('postData')
-        let postData={"mode":checkValue,"input":$('input.input').val()};
+        const postData={"mode":checkValue,"input":$('input.input').val()};
 
         $.ajax({
             url: '/predict',
