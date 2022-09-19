@@ -138,7 +138,7 @@ class Main:
                 list = []
                 for d in [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
                           obstacles,
-                          nps, events, chroma,warns, resets]:
+                          nps, events, chroma, errors, warns, resets]:
                     d = (d - Main.df.iloc[i, 0]) / Main.df.iloc[i, 1]
                     list.append(d)
                     i += 1
