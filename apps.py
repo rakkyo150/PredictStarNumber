@@ -29,7 +29,7 @@ def predict():
     if request.method == 'POST':
         mode = request.form['mode']
         input = request.form['input']
-        result = instance.predict(mode, input)
+        result = instance.predict(mode, input, 2)
         return result
 
 
@@ -39,7 +39,7 @@ def apiPredictWithId(id):
         if instance.clf is None or instance.df is None:
             instance.initModel()
         try:
-            result = instance.predict("!bsr", id)
+            result = instance.predict("!bsr", id, 1)
         except:
             abort(404)
         return make_response(jsonify(result))
@@ -51,7 +51,7 @@ def apiPredictWithHash(hash):
         if instance.clf is None or instance.df is None:
             instance.initModel()
         try:
-            result = instance.predict("hash", hash)
+            result = instance.predict("hash", hash, 1)
         except:
             abort(404)
         return make_response(jsonify(result))
@@ -64,7 +64,44 @@ def apiPredictWithLeaderboardId(leaderboardId):
         if instance.clf is None or instance.df is None:
             instance.initModel()
         try:
-            result = instance.predict("leaderboardId", leaderboardId)
+            result = instance.predict("leaderboardId", leaderboardId, 1)
+        except:
+            abort(404)
+        return make_response(jsonify(result))
+
+
+@app.route('/api2/id/<string:id>', methods=['GET'])
+def api2PredictWithId(id):
+    if request.method == 'GET':
+        if instance.clf is None or instance.df is None:
+            instance.initModel()
+        try:
+            result = instance.predict("!bsr", id, 2)
+        except:
+            abort(404)
+        return make_response(jsonify(result))
+
+
+@app.route('/api2/hash/<string:hash>', methods=['GET'])
+def api2PredictWithHash(hash):
+    if request.method == 'GET':
+        if instance.clf is None or instance.df is None:
+            instance.initModel()
+        try:
+            result = instance.predict("hash", hash, 2)
+        except:
+            abort(404)
+        return make_response(jsonify(result))
+
+
+@app.route('/api2/leaderboardId/<string:leaderboardId>', methods=['GET'])
+def api2PredictWithLeaderboardId(leaderboardId):
+    if request.method == 'GET':
+        print(f"leaderboardId : {leaderboardId}")
+        if instance.clf is None or instance.df is None:
+            instance.initModel()
+        try:
+            result = instance.predict("leaderboardId", leaderboardId, 2)
         except:
             abort(404)
         return make_response(jsonify(result))

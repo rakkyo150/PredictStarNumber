@@ -52,7 +52,7 @@ class Main:
         print(testScore)
         '''
 
-    def predict(self, mode, input) -> dict:
+    def predict(self, mode: str, input: str, apiVersion: int) -> dict:
         print("Select input mode number")
         print("1:!bsr 2:hash")
 
@@ -151,7 +151,12 @@ class Main:
                 finishPredict = (ans[0] * Main.df.iloc[14, 1]) + Main.df.iloc[14, 0]
                 floatStarNumber = float(finishPredict)
                 roundStarNumber = round(floatStarNumber, 2)
-                # result+=f'<p>{characteristic}-{k["difficulty"]} - {roundStarNumber}</p>\n'
-                result.setdefault(f'{characteristic}-{k["difficulty"]}', roundStarNumber)
+
+                if apiVersion == 1:
+                    # result+=f'<p>{k["difficulty"]} - {roundStarNumber}</p>\n'
+                    result.setdefault(k["difficulty"], roundStarNumber)
+                elif apiVersion == 2:
+                    # result+=f'<p>{characteristic}-{k["difficulty"]} - {roundStarNumber}</p>\n'
+                    result.setdefault(f'{characteristic}-{k["difficulty"]}', roundStarNumber)
 
         return result
