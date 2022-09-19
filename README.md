@@ -11,6 +11,6 @@ BeatSaverのAPIから取得できる情報のみで学習を行ったので、�
 ## API
 |Method|URI|Models|
 |:---|:---|:---|
-|GET|https://predictstarnumber.herokuapp.com/api/id/{id(!bsr)}|{ difficulty : PredictedStarNumber(float) }|
-|GET|https://predictstarnumber.herokuapp.com/api/hash/{hash}|{ difficulty : PredictedStarNumber(float) }|
-|GET|https://predictstarnumber.herokuapp.com/api/leaderboardId/{leaderboardId}|{ difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api/id/{id(!bsr)}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api/hash/{hash}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api/leaderboardId/{leaderboardId}|{ characteristic-difficulty : PredictedStarNumber(float) }|
