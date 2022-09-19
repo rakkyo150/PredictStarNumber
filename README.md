@@ -9,8 +9,19 @@ BeatSaverのAPIから取得できる情報のみで学習を行ったので、�
 それに伴って、学習済みモデルの調整も行うかもです。
 
 ## API
+### V2
 |Method|URI|Models|
 |:---|:---|:---|
-|GET|https://predictstarnumber.herokuapp.com/api/id/{id(!bsr)}|{ characteristic-difficulty : PredictedStarNumber(float) }|
-|GET|https://predictstarnumber.herokuapp.com/api/hash/{hash}|{ characteristic-difficulty : PredictedStarNumber(float) }|
-|GET|https://predictstarnumber.herokuapp.com/api/leaderboardId/{leaderboardId}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api2/id/{id(!bsr)}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api2/hash/{hash}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api2/leaderboardId/{leaderboardId}|{ characteristic-difficulty : PredictedStarNumber(float) }|
+
+### V1
+後方互換性のために古いAPIを残しています<br>
+characteristicがStandardの予測値しか取得できません
+
+|Method|URI|Models|
+|:---|:---|:---|
+|GET|https://predictstarnumber.herokuapp.com/api/id/{id(!bsr)}|{ difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api/hash/{hash}|{ difficulty : PredictedStarNumber(float) }|
+|GET|https://predictstarnumber.herokuapp.com/api/leaderboardId/{leaderboardId}|{ difficulty : PredictedStarNumber(float) }|
