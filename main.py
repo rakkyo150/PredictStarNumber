@@ -21,7 +21,7 @@ class Main:
         modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
                                      headers=secondHeaders)
 
-        Main.model = pickle.load(io.BytesIO(modelResponse.content))
+        self.model = pickle.load(io.BytesIO(modelResponse.content))
 
         # モデルのオープン
         # with open('model.pickle', mode='rb') as f:
@@ -36,9 +36,9 @@ class Main:
             url=standardScalerJson["assets"][4]["browser_download_url"],
             headers=secondHeaders)
 
-        print(standardScalerJson)
+        self.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
 
-        Main.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
+        print(self.standardScaler)
 
         # モデルのオープン
         # with open('standardScaler.pickle', mode='rb') as f:
