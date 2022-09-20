@@ -36,7 +36,7 @@ def predict():
 @app.route('/api/id/<string:id>', methods=['GET'])
 def apiPredictWithId(id):
     if request.method == 'GET':
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("!bsr", id, 1)
@@ -48,7 +48,7 @@ def apiPredictWithId(id):
 @app.route('/api/hash/<string:hash>', methods=['GET'])
 def apiPredictWithHash(hash):
     if request.method == 'GET':
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("hash", hash, 1)
@@ -61,7 +61,7 @@ def apiPredictWithHash(hash):
 def apiPredictWithLeaderboardId(leaderboardId):
     if request.method == 'GET':
         print(f"leaderboardId : {leaderboardId}")
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("leaderboardId", leaderboardId, 1)
@@ -73,7 +73,7 @@ def apiPredictWithLeaderboardId(leaderboardId):
 @app.route('/api2/id/<string:id>', methods=['GET'])
 def api2PredictWithId(id):
     if request.method == 'GET':
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("!bsr", id, 2)
@@ -85,7 +85,7 @@ def api2PredictWithId(id):
 @app.route('/api2/hash/<string:hash>', methods=['GET'])
 def api2PredictWithHash(hash):
     if request.method == 'GET':
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("hash", hash, 2)
@@ -98,7 +98,7 @@ def api2PredictWithHash(hash):
 def api2PredictWithLeaderboardId(leaderboardId):
     if request.method == 'GET':
         print(f"leaderboardId : {leaderboardId}")
-        if instance.clf is None or instance.df is None:
+        if instance.model is None or instance.standardScaler is None:
             instance.initModel()
         try:
             result = instance.predict("leaderboardId", leaderboardId, 2)

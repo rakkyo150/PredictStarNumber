@@ -2,13 +2,13 @@ import io
 import pickle
 import warnings
 
-import pandas as pd
+import numpy as np
 import requests
 
 
 class Main:
-    clf = None
-    df = None
+    model = None
+    standardScaler = None
 
     def initModel(self) -> None:
         warnings.simplefilter('ignore', UserWarning)
@@ -18,26 +18,31 @@ class Main:
         modelAssetResponse = requests.get(url=modelAssetEndpoint)
         modelJson = modelAssetResponse.json()
         secondHeaders = {'Accept': 'application/octet-stream'}
-        modelResponse = requests.get(url=modelJson["assets"][3]["browser_download_url"],
+        modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
                                      headers=secondHeaders)
 
-        Main.clf = pickle.load(io.BytesIO(modelResponse.content))
+        Main.model = pickle.load(io.BytesIO(modelResponse.content))
 
         # モデルのオープン
         # with open('model.pickle', mode='rb') as f:
-        #   clf = pickle.load(f)
+        #   self.model = pickle.load(f)
 
-        print("loading meanStd")
-        meanStdAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        meanStdResponse = requests.get(url=meanStdAssetEndpoint)
-        meanStdJson = meanStdResponse.json()
+        print("Loading standardScaler")
+        standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
+        standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
+        standardScalerJson = standardScalerResponse.json()
         secondHeaders = {'Accept': 'application/octet-stream'}
-        meanStdResponse = requests.get(url=meanStdJson["assets"][2]["browser_download_url"],
-                                       headers=secondHeaders)
+        standardScalerResponse = requests.get(
+            url=standardScalerJson["assets"][4]["browser_download_url"],
+            headers=secondHeaders)
 
-        Main.df = pd.read_csv(io.BytesIO(meanStdResponse.content), sep=",", index_col=0)
+        print(standardScalerJson)
 
-        # df = pd.read_csv("meanStd.csv",index_col=0)
+        Main.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
+
+        # モデルのオープン
+        # with open('standardScaler.pickle', mode='rb') as f:
+        #     self.standardScaler = pickle.load(f)
 
         '''
         print("Loading modelScore")
@@ -62,18 +67,18 @@ class Main:
             print("Input !bsr")
             bsr = input
             response = requests.get(f'https://api.beatsaver.com/maps/id/{bsr}')
-        elif mode =="leaderboardId":
+        elif mode == "leaderboardId":
             print("Input leaderboardId")
             leaderboardId = input
-            scoreSaberResponse=requests.get(f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
-            sSResponseJson=scoreSaberResponse.json()
-            hash=sSResponseJson["songHash"]
-            response=requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
+            scoreSaberResponse = requests.get(
+                f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
+            sSResponseJson = scoreSaberResponse.json()
+            hash = sSResponseJson["songHash"]
+            response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
         else:
             print("Input hash")
             hash = input
             response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
-
 
         # result=""
         result = {}
@@ -134,22 +139,25 @@ class Main:
                 warns = k["paritySummary"]["warns"]
                 resets = k["paritySummary"]["resets"]
 
-                i = 0
-                list = []
-                for d in [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
-                          obstacles,
-                          nps, events, chroma, errors, warns, resets]:
-                    d = (d - Main.df.iloc[i, 0]) / Main.df.iloc[i, 1]
-                    list.append(d)
-                    i += 1
+                # predictに渡すときのnumpyArrayは[]で括っている必要あり
+                numpyList = []
 
-                data = [list]
+                numpyArray = np.array(
+                    [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
+                     obstacles,
+                     nps, events, chroma, errors, warns, resets])
+                standardizedNumpyArray = (numpyArray - self.standardScaler.mean_) / np.sqrt(
+                    self.standardScaler.var_)
+                numpyList.append(standardizedNumpyArray)
 
-                ans = Main.clf.predict(data)
+                print(numpyList)
+
+                ans = self.model.predict(numpyList)
                 # type(ans) -> numpy.ndarray
+                # []に予測値だけが入った形で返ってくる
 
-                finishPredict = (ans[0] * Main.df.iloc[14, 1]) + Main.df.iloc[14, 0]
-                floatStarNumber = float(finishPredict)
+                print(ans)
+                floatStarNumber = float(ans[0])
                 roundStarNumber = round(floatStarNumber, 2)
 
                 if apiVersion == 1:
