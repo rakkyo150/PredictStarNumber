@@ -6,3 +6,6 @@ __pycache__
 node_modules
 package.json
 yarn.lock
+.eslintrc.json
+.prettierrc
+standardScaler.pickle
