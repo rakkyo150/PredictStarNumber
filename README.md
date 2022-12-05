@@ -9,14 +9,17 @@ BeatSaverのAPIから取得できる情報のみで学習を行ったので、�
 それに伴って、学習済みモデルの調整も行うかもです。
 
 ## API
-### V2
+### V2-RenderVersion
+https://predictstarnumber.onrender.com/api2/doc
+
+### V2(Not available from 2022.12.6)
 |Method|URI|Models|
 |:---|:---|:---|
 |GET|https://predictstarnumber.herokuapp.com/api2/id/{id(!bsr)}|{ characteristic-difficulty : PredictedStarNumber(float) }|
 |GET|https://predictstarnumber.herokuapp.com/api2/hash/{hash}|{ characteristic-difficulty : PredictedStarNumber(float) }|
 |GET|https://predictstarnumber.herokuapp.com/api2/leaderboardId/{leaderboardId}|{ characteristic-difficulty : PredictedStarNumber(float) }|
 
-### V1
+### V1(Not available from 2022.12.6)
 後方互換性のために古いAPIを残しています<br>
 characteristicがStandardの予測値しか取得できません
 
