@@ -1,8 +1,8 @@
 import os
 
-from flask import Flask, abort, jsonify, make_response, render_template, request, Blueprint
+from flask import Blueprint, Flask, abort, jsonify, make_response, render_template, request
 from flask_cors import CORS
-from flask_restx import Api,Resource
+from flask_restx import Api, Resource
 
 import main
 
@@ -10,25 +10,25 @@ app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 CORS(app)
 api_bp = Blueprint("api2", __name__, url_prefix="/api2/")
-api = Api(api_bp,version='1.2.0', doc='/doc', base_url='/')
+api = Api(api_bp, version='1.2.0', doc='/doc', base_url='/')
 app.register_blueprint(api_bp)
 
 instance = main.Main()
 
 
-@app.route('/',methods=['GET'])
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/init',methods=['POST'])
+@app.route('/init', methods=['POST'])
 def init():
     if request.method == 'POST':
         instance.initModel()
         return "OK"
 
 
-@app.route('/predict',methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
         mode = request.form['mode']
@@ -36,10 +36,11 @@ def predict():
         result = instance.predict(mode, input, 2)
         return result
 
+
 @api.route('/id/<string:id>')
 @api.doc(params={'id': 'map id(!bsr)'})
 class Api2Id(Resource):
-    def get(self,id):
+    def get(self, id):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
                 instance.initModel()
@@ -53,7 +54,7 @@ class Api2Id(Resource):
 @api.route('/hash/<string:hash>')
 @api.doc(params={'hash': 'map hash'})
 class Api2Hash(Resource):
-    def get(self,hash):
+    def get(self, hash):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
                 instance.initModel()
@@ -67,7 +68,7 @@ class Api2Hash(Resource):
 @api.route('/leaderboardId/<string:leaderboardId>')
 @api.doc(params={'leaderboardId': 'score saber leaderboard id'})
 class Api2LeaderboardId(Resource):
-    def get(self,leaderboardId):
+    def get(self, leaderboardId):
         if request.method == 'GET':
             print(f"leaderboardId : {leaderboardId}")
             if instance.model is None or instance.standardScaler is None:
