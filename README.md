@@ -4,9 +4,10 @@
 [PredictStarNumberHelper](https://github.com/rakkyo150/PredictStarNumberHelper)のモデルを使用。<br>
 BeatSaverのAPIから取得できる情報のみで学習を行ったので、譜面にもよりますが、結構外れた値がでることもあります。<br>
 ~~なお、学習精度に関しては[PredictStarNumberHelper](https://github.com/rakkyo150/PredictStarNumberHelper)のmodelScore.jsonで確認できます。<br>
-ちなみに、2022/1/3現在の精度は、trainScoreが0.9745135905035479、testScoreが0.9405029861621208です。~~
+ちなみに、2022/1/3現在の精度は、trainScoreが0.9745135905035479、testScoreが0.9405029861621208です。<br>
 学習精度に決定係数を用いるのは不適当だったので、その点は今後改善する予定です。<br>
-それに伴って、学習済みモデルの調整も行うかもです。
+それに伴って、学習済みモデルの調整も行うかもです。<br>~~
+以上で述べた[PredictStarNumberHelper](https://github.com/rakkyo150/PredictStarNumberHelper)の改善は完了してます。
 
 ## API
 ### V2-RenderVersion
