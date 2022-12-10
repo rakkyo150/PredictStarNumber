@@ -48,7 +48,7 @@ def predict():
 @api.route('/id/<string:id>')
 @api.doc(params={'id': 'map id(!bsr)'})
 class Api2Id(Resource):
-    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
+    @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, id):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
@@ -63,7 +63,7 @@ class Api2Id(Resource):
 @api.route('/hash/<string:hash>')
 @api.doc(params={'hash': 'map hash'})
 class Api2Hash(Resource):
-    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
+    @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, hash):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
@@ -78,7 +78,7 @@ class Api2Hash(Resource):
 @api.route('/leaderboardId/<string:leaderboardId>')
 @api.doc(params={'leaderboardId': 'score saber leaderboard id'})
 class Api2LeaderboardId(Resource):
-    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
+    @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, leaderboardId):
         if request.method == 'GET':
             print(f"leaderboardId : {leaderboardId}")
