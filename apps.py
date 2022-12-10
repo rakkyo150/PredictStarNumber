@@ -10,7 +10,15 @@ app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 CORS(app)
 api_bp = Blueprint("api2", __name__, url_prefix="/api2/")
-api = Api(api_bp, version='1.2.0', doc='/doc', base_url='/')
+description = "PredictStarNumber API\n" \
+              "GitHub : https://github.com/rakkyo150/PredictStarNumber\n" \
+              "Training Data : https://github.com/rakkyo150/RankedMapData\n" \
+              "Model : https://github.com/rakkyo150/PredictStarNumberHelper\n" \
+              "Mod : https://github.com/rakkyo150/PredictStarNumberMod\n" \
+              "Chrome Extension : https://github.com/rakkyo150/PredictStarNumberExtension"
+api = Api(api_bp, version='1.2.0', title="PredictStarNumber", description=description, doc='/doc',
+          default="Main", default_label="Main API", base_url='/',
+          license_url="https://github.com/rakkyo150/PredictStarNumber/blob/master/LICENSE")
 app.register_blueprint(api_bp)
 
 instance = main.Main()
@@ -40,6 +48,7 @@ def predict():
 @api.route('/id/<string:id>')
 @api.doc(params={'id': 'map id(!bsr)'})
 class Api2Id(Resource):
+    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
     def get(self, id):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
@@ -54,6 +63,7 @@ class Api2Id(Resource):
 @api.route('/hash/<string:hash>')
 @api.doc(params={'hash': 'map hash'})
 class Api2Hash(Resource):
+    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
     def get(self, hash):
         if request.method == 'GET':
             if instance.model is None or instance.standardScaler is None:
@@ -68,6 +78,7 @@ class Api2Hash(Resource):
 @api.route('/leaderboardId/<string:leaderboardId>')
 @api.doc(params={'leaderboardId': 'score saber leaderboard id'})
 class Api2LeaderboardId(Resource):
+    @api.doc(responses={200: "Success", 404: "Error: NOT FOUND"})
     def get(self, leaderboardId):
         if request.method == 'GET':
             print(f"leaderboardId : {leaderboardId}")
