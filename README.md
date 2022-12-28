@@ -13,10 +13,19 @@ BeatSaverのAPIから取得できる情報のみで学習を行ったので、�
 以上で述べた[PredictStarNumberHelper](https://github.com/rakkyo150/PredictStarNumberHelper)の改善は完了してます。
 
 ## Relevant Link
+
 Training Data : https://github.com/rakkyo150/RankedMapData <br>
 Model : https://github.com/rakkyo150/PredictStarNumberHelper <br>
 Mod : https://github.com/rakkyo150/PredictStarNumberMod <br>
 Chrome Extension : https://github.com/rakkyo150/PredictStarNumberExtension <br>
+
+```mermaid
+flowchart
+    First(RankedMapData) -- Training Data --> Second(PredictStarNumberHelper)
+    Second -- Learned Model --> Third(PredictStarNumber)
+    Third <-- REST API --> PredictStarNumberExtension
+    Third <-- REST API --> PredictStarNumberMod
+```
 
 ## API
 
