@@ -13,53 +13,43 @@ class Main:
     initModelHour: int = 0
 
     def initModel(self) -> None:
-        warnings.simplefilter('ignore', UserWarning)
+        try:
+            warnings.simplefilter('ignore', UserWarning)
 
-        self.initModelHour = datetime.now().hour
+            self.initModelHour = datetime.now().hour
 
-        print("Loading model")
-        modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        modelAssetResponse = requests.get(url=modelAssetEndpoint)
-        modelJson = modelAssetResponse.json()
-        secondHeaders = {'Accept': 'application/octet-stream'}
-        modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
-                                     headers=secondHeaders)
+            print("Loading model")
+            modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
+            modelAssetResponse = requests.get(url=modelAssetEndpoint)
+            modelJson = modelAssetResponse.json()
+            secondHeaders = {'Accept': 'application/octet-stream'}
+            modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
+                                         headers=secondHeaders)
+            self.model = pickle.load(io.BytesIO(modelResponse.content))
 
-        self.model = pickle.load(io.BytesIO(modelResponse.content))
+            # モデルのオープン
+            # with open('model.pickle', mode='rb') as f:
+            #   self.model = pickle.load(f)
 
-        # モデルのオープン
-        # with open('model.pickle', mode='rb') as f:
-        #   self.model = pickle.load(f)
+            print("Loading standardScaler")
+            standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
+            standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
+            standardScalerJson = standardScalerResponse.json()
+            secondHeaders = {'Accept': 'application/octet-stream'}
+            standardScalerResponse = requests.get(
+                url=standardScalerJson["assets"][4]["browser_download_url"],
+                headers=secondHeaders)
 
-        print("Loading standardScaler")
-        standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
-        standardScalerJson = standardScalerResponse.json()
-        secondHeaders = {'Accept': 'application/octet-stream'}
-        standardScalerResponse = requests.get(
-            url=standardScalerJson["assets"][4]["browser_download_url"],
-            headers=secondHeaders)
+            self.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
 
-        self.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
+            print(self.standardScaler)
 
-        print(self.standardScaler)
+            # モデルのオープン
+            # with open('standardScaler.pickle', mode='rb') as f:
+            #     self.standardScaler = pickle.load(f)
 
-        # モデルのオープン
-        # with open('standardScaler.pickle', mode='rb') as f:
-        #     self.standardScaler = pickle.load(f)
-
-        '''
-        print("Loading modelScore")
-        modelScoreAssetEndpoint="https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        modelScoreResponse=requests.get(url=modelScoreAssetEndpoint)
-        modelScoreJson=modelScoreResponse.json()
-        secondHeaders={'Accept': 'application/octet-stream' }
-        modelScoreResponse=requests.get(url=modelScoreJson["assets"][3]["browser_download_url"],headers=secondHeaders)
-        trainScore=modelScoreResponse.json()["trainScore"]
-        testScore=modelScoreResponse.json()["testScore"]
-        print(trainScore)
-        print(testScore)
-        '''
+        except Exception as e:
+            print(e)
 
     def predict(self, mode: str, input: str, apiVersion: int) -> dict:
         if self.model is None or self.standardScaler is None or \
