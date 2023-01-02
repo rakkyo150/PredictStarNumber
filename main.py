@@ -1,6 +1,7 @@
 import io
 import pickle
 import warnings
+from datetime import datetime
 
 import numpy as np
 import requests
@@ -9,9 +10,12 @@ import requests
 class Main:
     model = None
     standardScaler = None
+    initModelHour: int = 0
 
     def initModel(self) -> None:
         warnings.simplefilter('ignore', UserWarning)
+
+        self.initModelHour = datetime.now().hour
 
         print("Loading model")
         modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
@@ -58,6 +62,10 @@ class Main:
         '''
 
     def predict(self, mode: str, input: str, apiVersion: int) -> dict:
+        if self.model is None or self.standardScaler is None or \
+                self.initModelHour != datetime.now().hour:
+            self.initModel()
+
         print("Select input mode number")
         print("1:!bsr 2:hash")
 

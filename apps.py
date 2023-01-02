@@ -51,8 +51,6 @@ class Api2Id(Resource):
     @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, id):
         if request.method == 'GET':
-            if instance.model is None or instance.standardScaler is None:
-                instance.initModel()
             try:
                 result = instance.predict("!bsr", id, 2)
             except:
@@ -66,8 +64,6 @@ class Api2Hash(Resource):
     @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, hash):
         if request.method == 'GET':
-            if instance.model is None or instance.standardScaler is None:
-                instance.initModel()
             try:
                 result = instance.predict("hash", hash, 2)
             except:
@@ -82,8 +78,6 @@ class Api2LeaderboardId(Resource):
     def get(self, leaderboardId):
         if request.method == 'GET':
             print(f"leaderboardId : {leaderboardId}")
-            if instance.model is None or instance.standardScaler is None:
-                instance.initModel()
             try:
                 result = instance.predict("leaderboardId", leaderboardId, 2)
             except:
