@@ -6,11 +6,54 @@ from typing import Tuple
 
 import numpy as np
 import requests
+from sklearn.preprocessing import StandardScaler
+
+
+class FeatureValues:
+    bpm: float = 0
+    duration: float = 0
+    difficulty: int = 0
+    sageScore: int = 0
+    njs: float = 0
+    offset: float = 0
+    notes: int = 0
+    bombs: int = 0
+    obstacles: int = 0
+    nps: float = 0
+    events: int = 0
+    chroma: int = 0
+    errors: int = 0
+    warns: int = 0
+    resets: int = 0
+
+    def __init__(self, bpm: float, duration: int, difficulty: int, sageScore: int, njs: float,
+                 offset: float, notes: int, bombs: int, obstacles: int, nps: float, events: int,
+                 chroma: int, errors: int, warns: int, resets: int):
+        self.bpm = bpm
+        self.duration = duration
+        self.difficulty = difficulty
+        self.sageScore = sageScore
+        self.njs = njs
+        self.offset = offset
+        self.notes = notes
+        self.bombs = bombs
+        self.obstacles = obstacles
+        self.nps = nps
+        self.events = events
+        self.chroma = chroma
+        self.errors = errors
+        self.warns = warns
+        self.resets = resets
+
+    def array(self) -> np.ndarray:
+        return np.array([self.bpm, self.duration, self.difficulty, self.sageScore, self.njs,
+                         self.offset, self.notes, self.bombs, self.obstacles, self.nps, self.events,
+                         self.chroma, self.errors, self.warns, self.resets])
 
 
 class Main:
-    model = None
-    standardScaler = None
+    model: object = None
+    standardScaler: StandardScaler = None
     initModelHour: int = 0
 
     def initModel(self) -> None:
@@ -20,68 +63,22 @@ class Main:
             self.initModelHour = datetime.now().hour
 
             print("Loading model")
-            modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-            modelAssetResponse = requests.get(url=modelAssetEndpoint)
-            modelJson = modelAssetResponse.json()
-            secondHeaders = {'Accept': 'application/octet-stream'}
-            modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
-                                         headers=secondHeaders)
-            self.model = pickle.load(io.BytesIO(modelResponse.content))
-
-            # モデルのオープン
-            # with open('model.pickle', mode='rb') as f:
-            #   self.model = pickle.load(f)
-
+            self.model = self.loadModel()
             print("Loading standardScaler")
-            standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-            standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
-            standardScalerJson = standardScalerResponse.json()
-            secondHeaders = {'Accept': 'application/octet-stream'}
-            standardScalerResponse = requests.get(
-                url=standardScalerJson["assets"][4]["browser_download_url"],
-                headers=secondHeaders)
-
-            self.standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
-
-            print(self.standardScaler)
-
-            # モデルのオープン
-            # with open('standardScaler.pickle', mode='rb') as f:
-            #     self.standardScaler = pickle.load(f)
+            self.standardScaler = self.loadStandardScaler()
 
         except Exception as e:
             print(e)
             raise Exception(e)
 
     def predict(self, mode: str, input: str, apiVersion: int) -> dict:
-        if self.model is None or self.standardScaler is None or \
-                self.initModelHour != datetime.now().hour:
-            self.initModel()
+        self.confirmModel()
 
-        print("Select input mode number")
-        print("1:!bsr 2:hash")
-
-        print(mode)
+        print("Select input mode")
+        print("Selected : " + mode)
 
         try:
-            if mode == "!bsr":
-                print("Input !bsr")
-                bsr = input
-                response = requests.get(f'https://api.beatsaver.com/maps/id/{bsr}')
-            elif mode == "leaderboardId":
-                print("Input leaderboardId")
-                leaderboardId = input
-                scoreSaberResponse = requests.get(
-                    f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
-                sSResponseJson = scoreSaberResponse.json()
-                hash = sSResponseJson["songHash"]
-                response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
-            else:
-                print("Input hash")
-                hash = input
-                response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
-
-            mapDetail = response.json()
+            mapDetail, response = self.getMapData(input, mode)
             result = {}
 
             if response.status_code == 404:
@@ -95,6 +92,61 @@ class Main:
         except Exception as e:
             print(e)
             raise Exception(e)
+
+    def loadModel(self) -> object:
+        # モデルのオープン
+        # with open('model.pickle', mode='rb') as f:
+        #   self.model = pickle.load(f)
+
+        modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
+        modelAssetResponse = requests.get(url=modelAssetEndpoint)
+        modelJson = modelAssetResponse.json()
+        secondHeaders = {'Accept': 'application/octet-stream'}
+        modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
+                                     headers=secondHeaders)
+        model = pickle.load(io.BytesIO(modelResponse.content))
+        return model
+
+    def loadStandardScaler(self) -> StandardScaler:
+        # モデルのオープン
+        # with open('standardScaler.pickle', mode='rb') as f:
+        #     self.standardScaler = pickle.load(f)
+
+        standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
+        standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
+        standardScalerJson = standardScalerResponse.json()
+        secondHeaders = {'Accept': 'application/octet-stream'}
+        standardScalerResponse = requests.get(
+            url=standardScalerJson["assets"][4]["browser_download_url"],
+            headers=secondHeaders)
+        standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
+        print(self.standardScaler)
+        return standardScaler
+
+    def confirmModel(self) -> None:
+        if self.model is None or self.standardScaler is None or \
+                self.initModelHour != datetime.now().hour:
+            self.initModel()
+
+    def getMapData(self, input: str, mode: str) -> Tuple[dict, requests.Response]:
+        if mode == "!bsr":
+            print("Input !bsr")
+            bsr = input
+            response = requests.get(f'https://api.beatsaver.com/maps/id/{bsr}')
+        elif mode == "leaderboardId":
+            print("Input leaderboardId")
+            leaderboardId = input
+            scoreSaberResponse = requests.get(
+                f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
+            sSResponseJson = scoreSaberResponse.json()
+            hash = sSResponseJson["songHash"]
+            response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
+        else:
+            print("Input hash")
+            hash = input
+            response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
+        mapDetail = response.json()
+        return mapDetail, response
 
     def UseModel(self, apiVersion: int, mapDetail: dict) -> dict:
         predictResult = {}
@@ -154,13 +206,14 @@ class Main:
         warns = k["paritySummary"]["warns"]
         resets = k["paritySummary"]["resets"]
         # predictに渡すときのnumpyArrayは[]で括っている必要あり
+
+        featureValues = FeatureValues(bpm, duration, difficulty, sageScore, njs, offset, notes,
+                                      bombs, obstacles, nps, events, chroma, errors, warns, resets)
+
         numpyList = []
-        numpyArray = np.array(
-            [bpm, duration, difficulty, sageScore, njs, offset, notes, bombs,
-             obstacles,
-             nps, events, chroma, errors, warns, resets])
-        standardizedNumpyArray = (numpyArray - self.standardScaler.mean_) / np.sqrt(
+        standardizedNumpyArray = (featureValues.array() - self.standardScaler.mean_) / np.sqrt(
             self.standardScaler.var_)
         numpyList.append(standardizedNumpyArray)
         print(numpyList)
+
         return characteristic, numpyList
