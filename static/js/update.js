@@ -10,7 +10,9 @@ $(function () {
             $("div.finishLoading").css("display", "block");
         })
         .fail(function () {
-            console.log("failed");
+            console.log("Failed to load");
+            $("div.nowLoading").css("display", "none");
+            $("div.errorLoading").css("display", "block");
         });
 
     $("input.submit").click(function () {
@@ -37,10 +39,10 @@ $(function () {
                 $("div.finishPredict").css("display", "block");
             })
             .fail(function () {
+                console.log("Failed to predict");
                 $("h1.errorSentence").text("Your input is OK?");
                 $("div.finishPredict").css("display", "none");
                 $("div.errorPredict").css("display", "block");
-                console.log("failed");
             });
     });
 });
