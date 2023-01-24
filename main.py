@@ -6,7 +6,6 @@ from typing import Tuple
 
 import numpy as np
 import requests
-from sklearn.preprocessing import StandardScaler
 
 
 class FeatureValues:
@@ -53,7 +52,6 @@ class FeatureValues:
 
 class Main:
     model: object = None
-    standardScaler: StandardScaler = None
     initModelHour: int = 0
 
     def initModel(self) -> None:
@@ -64,8 +62,6 @@ class Main:
 
             print("Loading model")
             self.model = self.loadModel()
-            print("Loading standardScaler")
-            self.standardScaler = self.loadStandardScaler()
 
         except Exception as e:
             print(e)
@@ -102,30 +98,13 @@ class Main:
         modelAssetResponse = requests.get(url=modelAssetEndpoint)
         modelJson = modelAssetResponse.json()
         secondHeaders = {'Accept': 'application/octet-stream'}
-        modelResponse = requests.get(url=modelJson["assets"][2]["browser_download_url"],
+        modelResponse = requests.get(url=modelJson["assets"][3]["browser_download_url"],
                                      headers=secondHeaders)
         model = pickle.load(io.BytesIO(modelResponse.content))
         return model
 
-    def loadStandardScaler(self) -> StandardScaler:
-        # モデルのオープン
-        # with open('standardScaler.pickle', mode='rb') as f:
-        #     self.standardScaler = pickle.load(f)
-
-        standardScalerAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        standardScalerResponse = requests.get(url=standardScalerAssetEndpoint)
-        standardScalerJson = standardScalerResponse.json()
-        secondHeaders = {'Accept': 'application/octet-stream'}
-        standardScalerResponse = requests.get(
-            url=standardScalerJson["assets"][4]["browser_download_url"],
-            headers=secondHeaders)
-        standardScaler = pickle.load(io.BytesIO(standardScalerResponse.content))
-        print(self.standardScaler)
-        return standardScaler
-
     def confirmModel(self) -> None:
-        if self.model is None or self.standardScaler is None or \
-                self.initModelHour != datetime.now().hour:
+        if self.model is None or self.initModelHour != datetime.now().hour:
             self.initModel()
 
     def getMapData(self, input: str, mode: str) -> Tuple[dict, requests.Response]:
@@ -211,9 +190,7 @@ class Main:
                                       bombs, obstacles, nps, events, chroma, errors, warns, resets)
 
         numpyList = []
-        standardizedNumpyArray = (featureValues.array() - self.standardScaler.mean_) / np.sqrt(
-            self.standardScaler.var_)
-        numpyList.append(standardizedNumpyArray)
+        numpyList.append(featureValues.array())
         print(numpyList)
 
         return characteristic, numpyList
