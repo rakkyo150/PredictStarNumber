@@ -10,3 +10,4 @@ yarn.lock
 .prettierrc
 standardScaler.pickle
 /test/test.py
+venv
