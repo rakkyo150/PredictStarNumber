@@ -8,6 +8,7 @@ import main
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+app.json.sort_keys = False
 CORS(app)
 api_bp = Blueprint("api2", __name__, url_prefix="/api2/")
 description = "PredictStarNumber API\n" \
@@ -53,9 +54,10 @@ class Api2Id(Resource):
         if request.method == 'GET':
             try:
                 result = instance.predict("!bsr", id, 2)
+                result_json = {item[0]: item[1] for item in result}
             except:
                 abort(404)
-            return make_response(jsonify(result))
+            return make_response(jsonify(result_json))
 
 
 @api.route('/hash/<string:hash>')
@@ -66,9 +68,10 @@ class Api2Hash(Resource):
         if request.method == 'GET':
             try:
                 result = instance.predict("hash", hash, 2)
+                result_json = {item[0]: item[1] for item in result}
             except:
                 abort(404)
-            return make_response(jsonify(result))
+            return make_response(jsonify(result_json))
 
 
 @api.route('/leaderboardId/<string:leaderboardId>')
@@ -80,9 +83,10 @@ class Api2LeaderboardId(Resource):
             print(f"leaderboardId : {leaderboardId}")
             try:
                 result = instance.predict("leaderboardId", leaderboardId, 2)
+                result_json = {item[0]: item[1] for item in result}
             except:
                 abort(404)
-            return make_response(jsonify(result))
+            return make_response(jsonify(result_json))
 
 
 @app.errorhandler(404)

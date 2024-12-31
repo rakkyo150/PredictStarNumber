@@ -128,7 +128,7 @@ class Main:
         return mapDetail, response
 
     def UseModel(self, apiVersion: int, mapDetail: dict) -> dict:
-        predictResult = {}
+        predictResult = []
 
         mapDifficulty = mapDetail["versions"][-1]["diffs"]
         for k in mapDifficulty:
@@ -143,9 +143,11 @@ class Main:
             roundStarNumber = round(floatStarNumber, 2)
 
             if apiVersion == 1:
-                predictResult.setdefault(k["difficulty"], roundStarNumber)
+                predictResult.append([k["difficulty"], roundStarNumber])
             elif apiVersion == 2:
-                predictResult.setdefault(f'{characteristic}-{k["difficulty"]}', roundStarNumber)
+                predictResult.append([f'{characteristic}-{k["difficulty"]}', roundStarNumber])
+            
+            print(f"result: {predictResult}")
 
         return predictResult
 

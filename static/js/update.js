@@ -31,8 +31,16 @@ $(function () {
             .done(function (data) {
                 let resultHtml = "";
                 console.log(data);
-                Object.keys(data).forEach(function (key) {
-                    resultHtml += `<p>${key} : ${this[key]}</p>\n`;
+
+                let jsonData = {};
+                data.forEach(function (item) {
+                    jsonData[item[0]] = item[1];
+                });
+
+                console.log(jsonData);
+
+                Object.keys(jsonData).forEach(function (key) {
+                    resultHtml += `<p>${key} : ${jsonData[key]}</p>\n`;
                 }, data);
                 $("h1.resultMain").html(resultHtml);
                 $("div.errorPredict").css("display", "none");
