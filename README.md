@@ -33,7 +33,7 @@ flowchart
 
 https://predictstarnumber.onrender.com/api2/doc
 
-### V2(Not available from 2022.12.6)
+### V2
 
 |Method|URI|Models|
 |:---|:---|:---|
@@ -43,7 +43,7 @@ https://predictstarnumber.onrender.com/api2/doc
 
 ### V1(Not available from 2022.12.6)
 
-後方互換性のために古いAPIを残しています<br>
+後方互換性のために古いAPIを残していました<br>
 characteristicがStandardの予測値しか取得できません
 
 |Method|URI|Models|
