@@ -51,3 +51,10 @@ characteristicがStandardの予測値しか取得できません
 |GET|https://predictstarnumber.herokuapp.com/api/id/{id(!bsr)}|{ difficulty : PredictedStarNumber(float) }|
 |GET|https://predictstarnumber.herokuapp.com/api/hash/{hash}|{ difficulty : PredictedStarNumber(float) }|
 |GET|https://predictstarnumber.herokuapp.com/api/leaderboardId/{leaderboardId}|{ difficulty : PredictedStarNumber(float) }|
+
+### For Loacl Run
+pythonのパッケージマネージャーである[uv](https://github.com/astral-sh/uv)を使うと簡単に実行できます。
+```bash
+uv sync --locked
+uv run apps.py
+```
