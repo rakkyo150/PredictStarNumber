@@ -97,6 +97,7 @@ class Main:
         modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
         modelAssetResponse = requests.get(url=modelAssetEndpoint)
         modelJson = modelAssetResponse.json()
+        pring(modelJson)
         secondHeaders = {'Accept': 'application/octet-stream'}
         modelResponse = requests.get(url=modelJson["assets"][3]["browser_download_url"],
                                      headers=secondHeaders)
