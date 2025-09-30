@@ -3,6 +3,7 @@ import os
 from flask import Blueprint, Flask, abort, jsonify, make_response, render_template, request
 from flask_cors import CORS
 from flask_restx import Api, Resource
+from markupsafe import escape
 
 import main
 
@@ -42,7 +43,7 @@ def predict():
     if request.method == 'POST':
         mode = request.form['mode']
         input = request.form['input']
-        result = instance.predict(mode, input, 2)
+        result = instance.predict(escape(mode), escape(input), 2)
         return result
 
 
