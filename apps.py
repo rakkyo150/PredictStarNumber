@@ -18,7 +18,7 @@ description = "PredictStarNumber API\n" \
               "Model : https://github.com/rakkyo150/PredictStarNumberHelper\n" \
               "Mod : https://github.com/rakkyo150/PredictStarNumberMod\n" \
               "Chrome Extension : https://github.com/rakkyo150/PredictStarNumberExtension"
-api = Api(api_bp, version='1.2.0', title="PredictStarNumber", description=description, doc='/doc',
+api = Api(api_bp, version='1.2.1', title="PredictStarNumber", description=description, doc='/doc',
           default="Main", default_label="Main API", base_url='/',
           license_url="https://github.com/rakkyo150/PredictStarNumber/blob/master/LICENSE")
 app.register_blueprint(api_bp)
