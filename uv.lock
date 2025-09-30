@@ -379,7 +379,7 @@ wheels = [
 
 [[package]]
 name = "predictstarnumber"
-version = "0.1.0"
+version = "1.2.1"
 source = { virtual = "." }
 dependencies = [
     { name = "flask-cors" },
