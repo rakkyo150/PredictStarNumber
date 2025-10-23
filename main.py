@@ -60,25 +60,19 @@ class Main:
 
             self.initModelHour = datetime.now().hour
 
-            print("Loading model")
             self.model = self.loadModel()
 
         except Exception as e:
-            print(e)
             raise Exception(e)
 
     def predict(self, mode: str, input: str, apiVersion: int) -> dict:
         self.confirmModel()
-
-        print("Select input mode")
-        print("Selected : " + mode)
 
         try:
             mapDetail, response = self.getMapData(input, mode)
             result = {}
 
             if response.status_code == 404:
-                print(f"{response.status_code} Not Found: {mapDetail['id']}-{mapDetail['name']}")
                 pass
 
             else:
@@ -86,7 +80,6 @@ class Main:
             return result
 
         except Exception as e:
-            print(e)
             raise Exception(e)
 
     def loadModel(self) -> object:
@@ -105,11 +98,9 @@ class Main:
 
     def getMapData(self, input: str, mode: str) -> Tuple[dict, requests.Response]:
         if mode == "!bsr":
-            print("Input !bsr")
             bsr = input
             response = requests.get(f'https://api.beatsaver.com/maps/id/{bsr}')
         elif mode == "leaderboardId":
-            print("Input leaderboardId")
             leaderboardId = input
             scoreSaberResponse = requests.get(
                 f'https://scoresaber.com/api/leaderboard/by-id/{leaderboardId}/info')
@@ -117,7 +108,6 @@ class Main:
             hash = sSResponseJson["songHash"]
             response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
         else:
-            print("Input hash")
             hash = input
             response = requests.get(f'https://api.beatsaver.com/maps/hash/{hash}')
         mapDetail = response.json()
@@ -134,7 +124,6 @@ class Main:
             # type(ans) -> numpy.ndarray
             # []に予測値だけが入った形で返ってくる
 
-            print(ans)
             floatStarNumber = float(ans[0])
             roundStarNumber = round(floatStarNumber, 2)
 
@@ -142,8 +131,6 @@ class Main:
                 predictResult.append([k["difficulty"], roundStarNumber])
             elif apiVersion == 2:
                 predictResult.append([f'{characteristic}-{k["difficulty"]}', roundStarNumber])
-            
-            print(f"result: {predictResult}")
 
         return predictResult
 
@@ -153,7 +140,6 @@ class Main:
         if "sageScore" in mapDetail["versions"][-1]:
             sageScore = mapDetail["versions"][-1]["sageScore"]
         else:
-            print("sageScore is null")
             sageScore = 0
         difficulty = k["difficulty"]
         if difficulty == "Easy":
@@ -189,6 +175,5 @@ class Main:
 
         numpyList = []
         numpyList.append(featureValues.array())
-        print(numpyList)
 
         return characteristic, numpyList

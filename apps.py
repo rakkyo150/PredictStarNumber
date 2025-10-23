@@ -81,7 +81,6 @@ class Api2LeaderboardId(Resource):
     @api.doc(responses={200: "Success", 404: "Error"})
     def get(self, leaderboardId):
         if request.method == 'GET':
-            print(f"leaderboardId : {leaderboardId}")
             try:
                 result = instance.predict("leaderboardId", leaderboardId, 2)
                 result_json = {item[0]: item[1] for item in result}
