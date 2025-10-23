@@ -94,12 +94,8 @@ class Main:
         # with open('model.pickle', mode='rb') as f:
         #   self.model = pickle.load(f)
 
-        modelAssetEndpoint = "https://api.github.com/repos/rakkyo150/PredictStarNumberHelper/releases/latest"
-        modelAssetResponse = requests.get(url=modelAssetEndpoint)
-        modelJson = modelAssetResponse.json()
-        secondHeaders = {'Accept': 'application/octet-stream'}
-        modelResponse = requests.get(url=modelJson["assets"][3]["browser_download_url"],
-                                     headers=secondHeaders)
+        modelEndpoint = "https://github.com/rakkyo150/PredictStarNumberHelper/releases/latest/download/model.pickle"
+        modelResponse = requests.get(url=modelEndpoint)
         model = pickle.load(io.BytesIO(modelResponse.content))
         return model
 
